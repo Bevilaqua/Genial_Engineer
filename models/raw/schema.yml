@@ -1,0 +1,92 @@
+version: 2
+
+models:
+  - name: raw_children
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: op
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['I', 'U', 'D']
+      - name: child_id
+        tests:
+          - not_null
+      - name: tenant_id
+        tests:
+          - not_null
+
+  - name: raw_disciplines
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: op
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['I', 'U', 'D']
+      - name: discipline_id
+        tests:
+          - not_null
+
+  - name: raw_prescription_workloads
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: op
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['I', 'U', 'D']
+      - name: workload_id
+        tests:
+          - not_null
+      - name: child_id
+        tests:
+          - not_null
+      - name: discipline_id
+        tests:
+          - not_null
+      - name: status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['draft', 'validated', 'cancelled']
+
+  - name: raw_weekly_schedules
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: op
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['I', 'U', 'D']
+      - name: schedule_id
+        tests:
+          - not_null
+      - name: child_id
+        tests:
+          - not_null
+      - name: discipline_id
+        tests:
+          - not_null
+      - name: weekday
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+      - name: status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['active', 'cancelled', 'paused']

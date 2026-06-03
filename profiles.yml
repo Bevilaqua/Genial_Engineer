@@ -1,0 +1,11 @@
+scheduling_case:
+  target: dev
+  outputs:
+    dev:
+      type: sqlite
+      threads: 1
+      database: scheduling_case
+      schema: main
+      schemas_and_paths:
+        main: db/scheduling_case.db
+      schema_directory: db

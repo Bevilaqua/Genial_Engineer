@@ -1,0 +1,8 @@
+event_id,op,source_updated_at,ingested_at,discipline_id,discipline_name,is_active
+evt_disc_001,I,2026-05-01 11:21:00,2026-05-01 11:31:00,aba,ABA,true
+evt_disc_002,I,2026-05-01 11:22:00,2026-05-01 11:32:00,fono,Fono,true
+evt_disc_003,I,2026-05-01 11:23:00,2026-05-01 11:33:00,to,Terapia Ocupacional,true
+evt_disc_004,I,2026-05-01 11:24:00,2026-05-01 11:34:00,psico,Psicologia,true
+evt_disc_005,I,2026-05-01 11:25:00,2026-05-01 11:35:00,psicoped,Psicopedagogia,true
+evt_disc_900,U,2026-05-01 23:00:00,2026-05-01 23:01:00,psicoped,Psicopedagogia,false
+evt_disc_901,D,2026-05-01 23:02:00,2026-05-01 23:03:00,to,Terapia Ocupacional,false

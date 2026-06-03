@@ -1,0 +1,107 @@
+version: 2
+
+models:
+  # ---------------- staging ----------------
+  - name: stg_children
+    description: "Estado atual das crianças após a dedup de CDC (último evento por child_id, deletes removidos)."
+    columns:
+      - name: child_id
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_disciplines
+    description: "Estado atual das disciplinas após a dedup de CDC."
+    columns:
+      - name: discipline_id
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_prescription_workloads
+    description: "Estado atual das prescrições após a dedup de CDC. Uma linha por workload_id."
+    columns:
+      - name: workload_id
+        tests:
+          - not_null
+          - unique
+      - name: child_id
+        tests:
+          - not_null
+      - name: discipline_id
+        tests:
+          - not_null
+      - name: status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['draft', 'validated', 'cancelled']
+
+  - name: stg_weekly_schedules
+    description: "Estado atual das agendas semanais após a dedup de CDC. Uma linha por schedule_id."
+    columns:
+      - name: schedule_id
+        tests:
+          - not_null
+          - unique
+      - name: status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['active', 'cancelled', 'paused']
+
+  # ---------------- intermediate ----------------
+  - name: int_valid_workloads
+    description: "Prescrições validadas e com horas positivas, elegíveis a entrar na métrica."
+    columns:
+      - name: workload_id
+        tests:
+          - not_null
+          - unique
+      - name: prescribed_hours_per_week
+        tests:
+          - not_null
+
+  - name: int_active_schedules
+    description: "Agendas active com horas positivas, elegíveis a contribuir horas agendadas."
+    columns:
+      - name: schedule_id
+        tests:
+          - not_null
+          - unique
+
+  - name: int_calendar
+    description: "Calendário (date spine) cobrindo a janela de análise, com dia da semana e flag de fim de semana."
+    columns:
+      - name: date_day
+        tests:
+          - not_null
+          - unique
+      - name: weekday
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+
+  # ---------------- marts ----------------
+  - name: fct_daily_scheduling_rate
+    description: >
+      Tabela final no grain (child_id, discipline_id, date_day). Carrega horas
+      agendadas vs prescritas no nível diário e semanal, a scheduling_rate nas
+      duas resoluções, e uma coverage_flag para os casos de borda sem
+      correspondência entre agenda e prescrição.
+    columns:
+      - name: child_id
+        tests:
+          - not_null
+      - name: discipline_id
+        tests:
+          - not_null
+      - name: date_day
+        tests:
+          - not_null
+      - name: coverage_flag
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['matched', 'scheduled_without_prescription', 'prescribed_without_schedule']
